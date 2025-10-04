@@ -1,0 +1,253 @@
+# OpenClash 远程规则集模板
+# 适用于 OpenClash 订阅转换功能
+# 由 Gemini 根据您的 Shadowrocket 规则转换并优化
+# 最后更新: 2025-10-04
+
+port: 7890
+socks-port: 7891
+allow-lan: true
+mode: rule
+log-level: info
+ipv6: false
+external-controller: '0.0.0.0:9090'
+
+dns:
+  enable: true
+  enhanced-mode: redir-host
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://cloudflare-dns.com/dns-query
+    - https://dns.google/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://dns.quad9.net/dns-query
+  fake-ip-range: 198.18.0.1/16
+
+tun:
+  enable: true
+  stack: system
+  dns-hijack:
+    - 'any:53'
+  auto-route: true
+  auto-detect-interface: true
+
+# 策略组 (Proxy Groups)
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - 自动切换
+      - 香港优选
+      - 台湾优选
+      - 日本优选
+      - 狮城优选
+      - 美国优选
+
+  - name: 自动切换
+    type: fallback
+    proxies:
+      - 狮城优选
+      - 美国优选
+      - 日本优选
+      - 台湾优选
+      - 香港优选
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+
+  - name: AI服务
+    type: select
+    proxies:
+      - 美国优选
+      - 日本优选
+      - PROXY
+      - 香港优选
+      - 台湾优选
+      - 狮城优选
+
+  - name: 流媒体与解锁
+    type: select
+    proxies:
+      - 自动切换
+      - PROXY
+      - 香港优选
+      - 台湾优选
+      - 日本优选
+      - 狮城优选
+      - 美国优选
+
+  - name: 国际媒体
+    type: select
+    proxies:
+      - 自动切换
+      - PROXY
+      - 香港优选
+      - 台湾优选
+      - 日本优选
+      - 狮城优选
+      - 美国优选
+
+  - name: 国际规则
+    type: select
+    proxies:
+      - 自动切换
+      - PROXY
+      - 香港优选
+      - 台湾优选
+      - 日本优选
+      - 狮城优选
+      - 美国优选
+
+  - name: 电报消息
+    type: select
+    proxies:
+      - 自动切换
+      - PROXY
+      - 香港优选
+      - 台湾优选
+      - 日本优选
+      - 狮城优选
+      - 美国优选
+
+  - name: 谷歌服务
+    type: select
+    proxies:
+      - PROXY
+      - 香港优选
+      - 台湾优选
+      - 日本优选
+      - 狮城优选
+      - 美国优选
+
+  - name: 苹果服务
+    type: select
+    proxies:
+      - DIRECT
+      - PROXY
+
+  - name: 微软服务
+    type: select
+    proxies:
+      - DIRECT
+      - PROXY
+
+  - name: 微信消息
+    type: select
+    proxies:
+      - DIRECT
+      - PROXY
+
+  - name: 国内媒体
+    type: select
+    proxies:
+      - DIRECT
+      - PROXY
+
+  # --- 节点自动测速分组 ---
+  - name: 香港优选
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    tolerance: 30
+    proxies: []
+
+  - name: 台湾优选
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    tolerance: 30
+    proxies: []
+
+  - name: 日本优选
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    tolerance: 30
+    proxies: []
+
+  - name: 狮城优选
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    tolerance: 30
+    proxies: []
+
+  - name: 美国优选
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 900
+    tolerance: 30
+    proxies: []
+
+# 规则提供者 (Rule Providers)
+rule-providers:
+  Lan: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Lan/Lan.list", path: ./ruleset/Lan.yaml, interval: 86400}
+  Netflix: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Netflix/Netflix.list", path: ./ruleset/Netflix.yaml, interval: 86400}
+  Disney: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Disney/Disney.list", path: ./ruleset/Disney.yaml, interval: 86400}
+  Apple: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Apple/Apple.list", path: ./ruleset/Apple.yaml, interval: 86400}
+  Microsoft: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Microsoft/Microsoft.list", path: ./ruleset/Microsoft.yaml, interval: 86400}
+  Google: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Google/Google.list", path: ./ruleset/Google.yaml, interval: 86400}
+  WeChat: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/WeChat/WeChat.list", path: ./ruleset/WeChat.yaml, interval: 86400}
+  Bilibili: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Bilibili/Bilibili.list", path: ./ruleset/Bilibili.yaml, interval: 86400}
+  MyRules: {type: http, behavior: classical, url: "https://cdn.jsdelivr.net/gh/YuanHong071/MyRules@main/MyRules.list", path: ./ruleset/MyRules.yaml, interval: 86400}
+  China: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/China/China.list", path: ./ruleset/China.yaml, interval: 86400}
+  China_IP: {type: http, behavior: classical, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/China/China_IP.list", path: ./ruleset/China_IP.yaml, interval: 86400}
+
+# 规则 (Rules)
+rules:
+  - DOMAIN-SUFFIX,superchat.live,国际规则
+  - RULE-SET,Lan,DIRECT
+  - DOMAIN-SUFFIX,alipay.com,DIRECT
+  - DOMAIN-SUFFIX,alipay.cn,DIRECT
+  - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
+  - DOMAIN-SUFFIX,icbc.com.cn,DIRECT
+  - DOMAIN-SUFFIX,boc.cn,DIRECT
+  - DOMAIN-SUFFIX,cmbchina.com,DIRECT
+  - DOMAIN-SUFFIX,bankcomm.com,DIRECT
+  - DOMAIN-SUFFIX,ccb.com,DIRECT
+  - DOMAIN-SUFFIX,abchina.com,DIRECT
+  - DOMAIN-SUFFIX,psbc.com,DIRECT
+  - DOMAIN-SUFFIX,taobao.com,DIRECT
+  - DOMAIN-SUFFIX,tmall.com,DIRECT
+  - DOMAIN-SUFFIX,jd.com,DIRECT
+  - DOMAIN-SUFFIX,360buyimg.com,DIRECT
+  - DOMAIN-SUFFIX,pinduoduo.com,DIRECT
+  - DOMAIN-SUFFIX,yangkeduo.com,DIRECT
+  - DOMAIN-SUFFIX,vip.com,DIRECT
+  - DOMAIN-SUFFIX,meituan.com,DIRECT
+  - DOMAIN-SUFFIX,dianping.com,DIRECT
+  - DOMAIN-SUFFIX,ele.me,DIRECT
+  - DOMAIN-SUFFIX,suning.com,DIRECT
+  - DOMAIN-SUFFIX,gome.com.cn,DIRECT
+  - DOMAIN-SUFFIX,ctrip.com,DIRECT
+  - DOMAIN-SUFFIX,qunar.com,DIRECT
+  - DOMAIN-SUFFIX,didi.cn,DIRECT
+  - RULE-SET,Netflix,流媒体与解锁
+  - RULE-SET,Disney,流媒体与解锁
+  - DOMAIN-SUFFIX,youtube.com,流媒体与解锁
+  - DOMAIN-SUFFIX,ytimg.com,流媒体与解锁
+  - DOMAIN-SUFFIX,openai.com,AI服务
+  - DOMAIN-SUFFIX,chatgpt.com,AI服务
+  - DOMAIN-SUFFIX,oaiusercontent.com,AI服务
+  - DOMAIN-SUFFIX,anthropic.com,AI服务
+  - DOMAIN-SUFFIX,claude.ai,AI服务
+  - DOMAIN-SUFFIX,gemini.google.com,AI服务
+  - DOMAIN-SUFFIX,ai.google,AI服务
+  - DOMAIN-SUFFIX,copilot.microsoft.com,AI服务
+  - DOMAIN-SUFFIX,designer.microsoft.com,AI服务
+  - DOMAIN-SUFFIX,sydney.bing.com,AI服务
+  - DOMAIN-SUFFIX,bing.com,国际规则
+  - DOMAIN-SUFFIX,t.me,电报消息
+  - DOMAIN-SUFFIX,telegram.org,电报消息
+  - RULE-SET,Apple,苹果服务
+  - RULE-SET,Microsoft,微软服务
+  - RULE-SET,Google,谷歌服务
+  - RULE-SET,WeChat,微信消息
+  - RULE-SET,Bilibili,国内媒体
+  - DOMAIN-SUFFIX,netflav1.com,国际规则
+  - RULE-SET,MyRules,国际规则
+  - RULE-SET,China,DIRECT
+  - RULE-SET,China_IP,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
